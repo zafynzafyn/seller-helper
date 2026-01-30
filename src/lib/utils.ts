@@ -49,16 +49,21 @@ export function truncateText(text: string, maxLength: number): string {
   return text.substring(0, maxLength - 3) + "...";
 }
 
-export function calculateEtsyFees(price: number, quantity: number = 1): {
+export function calculateEtsyFees(
+  price: number,
+  quantity: number = 1,
+  discount: number = 0
+): {
   listingFee: number;
   transactionFee: number;
   processingFee: number;
   totalFees: number;
 } {
-  const subtotal = price * quantity;
+  const subtotal = (price * quantity) - discount;
+  const effectiveSubtotal = Math.max(0, subtotal);
   const listingFee = 0.2 * quantity; // $0.20 per listing
-  const transactionFee = subtotal * 0.065; // 6.5% transaction fee
-  const processingFee = subtotal * 0.03 + 0.25; // 3% + $0.25 payment processing
+  const transactionFee = effectiveSubtotal * 0.065; // 6.5% transaction fee
+  const processingFee = effectiveSubtotal > 0 ? effectiveSubtotal * 0.03 + 0.25 : 0; // 3% + $0.25 payment processing
 
   return {
     listingFee,
@@ -72,26 +77,30 @@ export function calculateNetRevenue(
   price: number,
   quantity: number,
   shippingCollected: number = 0,
-  cost: number = 0
+  cost: number = 0,
+  discount: number = 0
 ): {
   grossRevenue: number;
   fees: ReturnType<typeof calculateEtsyFees>;
   netRevenue: number;
   profit: number;
   margin: number;
+  discount: number;
 } {
-  const grossRevenue = price * quantity + shippingCollected;
-  const fees = calculateEtsyFees(price, quantity);
-  const netRevenue = grossRevenue - fees.totalFees;
+  const grossRevenue = (price * quantity) + shippingCollected - discount;
+  const effectiveGross = Math.max(0, grossRevenue);
+  const fees = calculateEtsyFees(price, quantity, discount);
+  const netRevenue = effectiveGross - fees.totalFees;
   const profit = netRevenue - cost;
-  const margin = grossRevenue > 0 ? (profit / grossRevenue) * 100 : 0;
+  const margin = effectiveGross > 0 ? (profit / effectiveGross) * 100 : 0;
 
   return {
-    grossRevenue,
+    grossRevenue: effectiveGross,
     fees,
     netRevenue,
     profit,
     margin,
+    discount,
   };
 }
 
