@@ -1,0 +1,254 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String?
+  image         String?
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  stores        Store[]
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Store {
+  id              String   @id @default(cuid())
+  userId          String
+  etsyShopId      String   @unique
+  shopName        String
+  shopUrl         String?
+  currency        String   @default("USD")
+  accessToken     String?  @db.Text
+  refreshToken    String?  @db.Text
+  tokenExpiresAt  DateTime?
+  lastSyncAt      DateTime?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listings            Listing[]
+  orders              Order[]
+  customers           Customer[]
+  analyticsSnapshots  AnalyticsSnapshot[]
+
+  @@index([userId])
+}
+
+model Listing {
+  id                String   @id @default(cuid())
+  storeId           String
+  etsyListingId     String
+  title             String
+  description       String?  @db.Text
+  price             Float
+  currency          String   @default("USD")
+  quantity          Int      @default(0)
+  state             String   @default("active") // active, inactive, draft, expired
+  views             Int      @default(0)
+  favorites         Int      @default(0)
+  tags              String[] @default([])
+  materials         String[] @default([])
+  imageUrls         String[] @default([])
+  primaryImageUrl   String?
+  shippingCost      Float?
+  processingMin     Int?
+  processingMax     Int?
+  etsyUrl           String?
+  etsyCreatedAt     DateTime?
+  etsyUpdatedAt     DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  store             Store              @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orderItems        OrderItem[]
+  aiOptimizations   AIOptimization[]
+
+  @@unique([storeId, etsyListingId])
+  @@index([storeId])
+  @@index([state])
+}
+
+model Order {
+  id                String    @id @default(cuid())
+  storeId           String
+  customerId        String?
+  etsyReceiptId     String
+  orderTotal        Float
+  subtotal          Float
+  shippingCost      Float     @default(0)
+  taxCost           Float     @default(0)
+  discountAmount    Float     @default(0)
+  etsyFees          Float     @default(0)
+  processingFees    Float     @default(0)
+  netRevenue        Float?
+  currency          String    @default("USD")
+  status            String    @default("pending") // pending, paid, shipped, completed, cancelled
+  buyerEmail        String?
+  buyerName         String?
+  shippingAddress   Json?
+  note              String?   @db.Text
+  giftMessage       String?   @db.Text
+  isPaid            Boolean   @default(false)
+  isShipped         Boolean   @default(false)
+  paidAt            DateTime?
+  shippedAt         DateTime?
+  etsyCreatedAt     DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  store             Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  customer          Customer?   @relation(fields: [customerId], references: [id])
+  items             OrderItem[]
+
+  @@unique([storeId, etsyReceiptId])
+  @@index([storeId])
+  @@index([customerId])
+  @@index([status])
+  @@index([etsyCreatedAt])
+}
+
+model OrderItem {
+  id                String   @id @default(cuid())
+  orderId           String
+  listingId         String?
+  etsyTransactionId String
+  title             String
+  quantity          Int      @default(1)
+  price             Float
+  shippingCost      Float    @default(0)
+  variations        Json?
+  createdAt         DateTime @default(now())
+
+  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  listing Listing? @relation(fields: [listingId], references: [id])
+
+  @@index([orderId])
+  @@index([listingId])
+}
+
+model Customer {
+  id              String   @id @default(cuid())
+  storeId         String
+  etsyUserId      String?
+  email           String?
+  name            String?
+  totalOrders     Int      @default(0)
+  totalSpent      Float    @default(0)
+  averageOrder    Float    @default(0)
+  firstOrderAt    DateTime?
+  lastOrderAt     DateTime?
+  tags            String[] @default([])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  store   Store          @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orders  Order[]
+  notes   CustomerNote[]
+
+  @@unique([storeId, etsyUserId])
+  @@unique([storeId, email])
+  @@index([storeId])
+}
+
+model CustomerNote {
+  id          String   @id @default(cuid())
+  customerId  String
+  content     String   @db.Text
+  type        String   @default("note") // note, followup, feedback
+  isCompleted Boolean  @default(false)
+  dueDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+}
+
+model AnalyticsSnapshot {
+  id              String   @id @default(cuid())
+  storeId         String
+  date            DateTime @db.Date
+  period          String   @default("daily") // daily, weekly, monthly
+  revenue         Float    @default(0)
+  orders          Int      @default(0)
+  views           Int      @default(0)
+  favorites       Int      @default(0)
+  conversionRate  Float    @default(0)
+  averageOrder    Float    @default(0)
+  etsyFees        Float    @default(0)
+  shippingRevenue Float    @default(0)
+  netRevenue      Float    @default(0)
+  topListings     Json?
+  createdAt       DateTime @default(now())
+
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@unique([storeId, date, period])
+  @@index([storeId])
+  @@index([date])
+}
+
+model AIOptimization {
+  id              String   @id @default(cuid())
+  listingId       String
+  type            String   // title, description, tags, seo
+  originalContent String   @db.Text
+  suggestedContent String  @db.Text
+  status          String   @default("pending") // pending, approved, rejected
+  metadata        Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@index([listingId])
+  @@index([status])
+}
