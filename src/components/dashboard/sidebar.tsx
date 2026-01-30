@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Analytics", href: "/analytics", icon: BarChart3 },
   { name: "Listings", href: "/listings", icon: Package },
   { name: "Pricing", href: "/pricing", icon: DollarSign },
@@ -97,7 +97,7 @@ export function Sidebar() {
         <Button
           variant="ghost"
           className="w-full justify-start text-muted-foreground hover:text-foreground"
-          onClick={() => signOut({ callbackUrl: "/login" })}
+          onClick={() => signOut({ callbackUrl: "/" })}
         >
           <LogOut className="mr-3 h-5 w-5" />
           Sign out
