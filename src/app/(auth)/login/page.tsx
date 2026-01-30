@@ -4,6 +4,7 @@ import { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -50,6 +51,15 @@ function LoginForm() {
 
   return (
     <Card className="w-full max-w-md">
+      <div className="p-4 pb-0">
+        <Link
+          href="/"
+          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to homepage
+        </Link>
+      </div>
       <CardHeader className="space-y-1 text-center">
         <div className="mx-auto mb-4 h-12 w-12 rounded-full etsy-gradient flex items-center justify-center">
           <svg
