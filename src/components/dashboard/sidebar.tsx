@@ -37,11 +37,13 @@ export function Sidebar() {
   return (
     <div className="flex h-full w-64 flex-col border-r bg-card">
       {/* Logo */}
-      <div className="flex h-16 items-center gap-2 px-6 border-b">
-        <div className="h-8 w-8 rounded-lg etsy-gradient flex items-center justify-center">
-          <Store className="h-5 w-5 text-white" />
-        </div>
-        <span className="text-lg font-semibold">Seller Helper</span>
+      <div className="flex h-16 items-center px-6 border-b">
+        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <div className="h-8 w-8 rounded-lg etsy-gradient flex items-center justify-center">
+            <Store className="h-5 w-5 text-white" />
+          </div>
+          <span className="text-lg font-semibold">Seller Helper</span>
+        </Link>
       </div>
 
       {/* Navigation */}

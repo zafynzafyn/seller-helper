@@ -21,7 +21,7 @@ export default function HomePage() {
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <div className="h-10 w-10 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
               <svg
                 className="h-5 w-5 text-white"
@@ -38,7 +38,7 @@ export default function HomePage() {
               </svg>
             </div>
             <span className="text-xl font-bold">Seller Helper</span>
-          </div>
+          </Link>
           <div className="flex items-center gap-4">
             {session ? (
               <Link href="/dashboard">
