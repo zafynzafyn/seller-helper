@@ -136,11 +136,72 @@ export default function HomePage() {
                 <Benefit text="Save hours every week on admin tasks" />
               </div>
             </div>
-            <div className="bg-gradient-to-br from-orange-100 to-orange-200 rounded-2xl p-8 aspect-square flex items-center justify-center">
-              <div className="text-center">
-                <TrendingUp className="h-24 w-24 text-orange-500 mx-auto mb-4" />
-                <p className="text-2xl font-bold text-gray-900">Boost Sales</p>
-                <p className="text-gray-600">with data-driven insights</p>
+            <div className="bg-gradient-to-br from-orange-100 to-orange-200 rounded-2xl p-6 flex items-center justify-center">
+              {/* Sales Dashboard Illustration */}
+              <div className="w-full max-w-md">
+                <svg viewBox="0 0 400 300" className="w-full h-auto" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Background Card */}
+                  <rect x="20" y="20" width="360" height="260" rx="16" fill="white" fillOpacity="0.9"/>
+
+                  {/* Header */}
+                  <rect x="40" y="40" width="120" height="8" rx="4" fill="#f97316"/>
+                  <rect x="40" y="56" width="80" height="6" rx="3" fill="#fed7aa"/>
+
+                  {/* Stats Cards */}
+                  <rect x="40" y="80" width="100" height="60" rx="8" fill="#fff7ed"/>
+                  <rect x="155" y="80" width="100" height="60" rx="8" fill="#fff7ed"/>
+                  <rect x="270" y="80" width="100" height="60" rx="8" fill="#fff7ed"/>
+
+                  {/* Stats Icons */}
+                  <circle cx="60" cy="100" r="12" fill="#f97316" fillOpacity="0.2"/>
+                  <path d="M56 100L59 103L64 97" stroke="#f97316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+
+                  <circle cx="175" cy="100" r="12" fill="#22c55e" fillOpacity="0.2"/>
+                  <path d="M175 96V104M171 100H179" stroke="#22c55e" strokeWidth="2" strokeLinecap="round"/>
+
+                  <circle cx="290" cy="100" r="12" fill="#3b82f6" fillOpacity="0.2"/>
+                  <path d="M286 103L290 97L294 103" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+
+                  {/* Stats Numbers */}
+                  <text x="60" y="125" fill="#1f2937" fontSize="14" fontWeight="bold">$12.4k</text>
+                  <text x="175" y="125" fill="#1f2937" fontSize="14" fontWeight="bold">847</text>
+                  <text x="290" y="125" fill="#1f2937" fontSize="14" fontWeight="bold">+24%</text>
+
+                  {/* Chart Area */}
+                  <rect x="40" y="160" width="320" height="100" rx="8" fill="#fff7ed"/>
+
+                  {/* Chart Grid Lines */}
+                  <line x1="60" y1="180" x2="340" y2="180" stroke="#fed7aa" strokeWidth="1"/>
+                  <line x1="60" y1="200" x2="340" y2="200" stroke="#fed7aa" strokeWidth="1"/>
+                  <line x1="60" y1="220" x2="340" y2="220" stroke="#fed7aa" strokeWidth="1"/>
+                  <line x1="60" y1="240" x2="340" y2="240" stroke="#fed7aa" strokeWidth="1"/>
+
+                  {/* Chart Bars */}
+                  <rect x="70" y="210" width="24" height="35" rx="4" fill="#fdba74"/>
+                  <rect x="110" y="195" width="24" height="50" rx="4" fill="#fb923c"/>
+                  <rect x="150" y="185" width="24" height="60" rx="4" fill="#f97316"/>
+                  <rect x="190" y="200" width="24" height="45" rx="4" fill="#fb923c"/>
+                  <rect x="230" y="175" width="24" height="70" rx="4" fill="#ea580c"/>
+                  <rect x="270" y="165" width="24" height="80" rx="4" fill="#f97316"/>
+                  <rect x="310" y="155" width="24" height="90" rx="4" fill="#ea580c"/>
+
+                  {/* Trend Line */}
+                  <path d="M82 205 L122 190 L162 180 L202 195 L242 170 L282 160 L322 150"
+                        stroke="#22c55e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+
+                  {/* Trend Line Dots */}
+                  <circle cx="82" cy="205" r="4" fill="#22c55e"/>
+                  <circle cx="122" cy="190" r="4" fill="#22c55e"/>
+                  <circle cx="162" cy="180" r="4" fill="#22c55e"/>
+                  <circle cx="202" cy="195" r="4" fill="#22c55e"/>
+                  <circle cx="242" cy="170" r="4" fill="#22c55e"/>
+                  <circle cx="282" cy="160" r="4" fill="#22c55e"/>
+                  <circle cx="322" cy="150" r="4" fill="#22c55e"/>
+                </svg>
+                <div className="text-center mt-4">
+                  <p className="text-xl font-bold text-gray-900">Boost Sales</p>
+                  <p className="text-gray-600 text-sm">with data-driven insights</p>
+                </div>
               </div>
             </div>
           </div>
